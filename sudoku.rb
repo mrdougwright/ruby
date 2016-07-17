@@ -1,28 +1,28 @@
 class Sudoku
 
   def initialize
-    @grid = Array.new(9).map{ |e| Array.new(9) }
+    @grid = Array.new(9).map{ |e| 3.times.map{|f| Array.new(3)} }
 
     (1..9).to_a.shuffle.each {|num| nine_inserts(num) }
     # make_box_numbers(0,0)
-    # make_box_numbers(0,3)
-    # make_box_numbers(0,6)
-    # make_box_numbers(3,0)
-    # make_box_numbers(3,3)
-    # make_box_numbers(3,6)
-    # make_box_numbers(6,0)
-    # make_box_numbers(6,3)
-    # make_box_numbers(6,6)
+    # box 0 [[1,2,3], [4,5,6], [7,8,9]]
+    # =>
+    # (mini grid)
+    # [1,2,3]
+    # [4,5,6]
+    # [7,8,9]
   end
 
   def nine_inserts(number)
-    x=0; y=0;
-    [0,3,6].each do |x_row|
-      [0,3,6].each do |y_row|
-        # puts "Grid box: #{x_row}, #{y_row}"
-        test_and_insert_nums(x_row, y_row, number)
-      end
+    9.times do |sqr_index|
+      next if number_in_mini_grid?(sqr_index, number)
+      # test_and_insert_nums(x_row, y_row, number)
+      # test_and_insert_nums(x_row, y_row, number)
     end
+  end
+
+  def number_in_mini_grid?(x_row, number)
+    @grid[x_row].flatten.include?(number)
   end
 
   def test_and_insert_nums(x_row, y_row, number)
@@ -75,19 +75,21 @@ class Sudoku
   end
 end
 
-#         y
-#         0    1    2    3    4    5    6     7    8
-#     0 [ c ,  b ,  a , nil, nil, nil, nil, nil, nil]
-#     1 [ 9 ,  8 ,  7 , nil, nil, nil, nil, nil, nil]
-#     2 [nil, nil,    , nil, nil, nil, nil, nil, nil]
+Sudoku.new.print_grid
+#          y
+#        0: 0   1    2,  1:  0   1    2,  2: 0   1    2
+#  x  0 [[ c ,  b ,  a], [nil, nil, nil], [nil, nil, nil]]
+#     1 [[ 9 ,  8 ,  7], [nil, nil, nil], [nil, nil, nil]]
+#     2 [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 
-#     3 [nil, nil,    , nil, nil, nil, nil, nil, nil]
-#     4 [y-2, y-1,  42, nil, nil, nil, nil, nil, nil]
-#     5 [y-1,  51, y+1, nil, nil, nil, nil, nil, nil]
+#     3 [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
+#     4 [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
+#     5 [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 
-#     6 [nil, nil, nil, nil, nil, nil, nil, nil, nil]
-#     7 [nil, nil, nil, nil, nil, nil, nil, nil, nil]
-#  x  8 [nil, nil, nil, nil, nil, nil, nil, nil, nil]
+#     6 [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
+#     7 [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
+#     8 [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
+
 
 
 # [ 1,  2,  3,   4,  5,  6,   7,  8,  9]
