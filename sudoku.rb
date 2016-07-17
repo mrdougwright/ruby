@@ -4,30 +4,40 @@ class Sudoku
     make_box_numbers(0,0)
     make_box_numbers(0,3)
     make_box_numbers(0,6)
-    make_box_numbers(3,0)
-    make_box_numbers(3,3)
-    make_box_numbers(3,6)
-    make_box_numbers(6,0)
-    make_box_numbers(6,3)
-    make_box_numbers(6,6)
+    # make_box_numbers(3,0)
+    # make_box_numbers(3,3)
+    # make_box_numbers(3,6)
+    # make_box_numbers(6,0)
+    # make_box_numbers(6,3)
+    # make_box_numbers(6,6)
   end
 
-  def make_box_numbers(x,y) # send left corners for params: 0,0 - 0,3 - 6,5 etc.
+  def insert_number(x, y, num)
+    return false unless @grid[x][y].nil?
+    if ( !get_x_numbers(x).include?(num) && !get_y_numbers(y).include?(num) )
+      @grid[x][y] = num
+      return true
+    end
+  end
+
+  def make_box_numbers(x,y)
+    # return unless modulo 3, 0 for x, y ...
     numbers = one_thru_nine.shuffle
-    @grid[x][y]     = numbers.pop
-    @grid[x][y+1]   = numbers.pop
-    @grid[x][y+2]   = numbers.pop
-    @grid[x+1][y]   = numbers.pop
-    @grid[x+1][y+1] = numbers.pop
-    @grid[x+1][y+2] = numbers.pop
-    @grid[x+2][y]   = numbers.pop
-    @grid[x+2][y+1] = numbers.pop
-    @grid[x+2][y+2] = numbers.pop
+
+    numbers.each do |number|
+      number_inserted = false
+      3.times do |xdex|
+        break if number_inserted
+        3.times do |ydex|
+          number_inserted = insert_number(x + xdex, y + ydex, number)
+          break if number_inserted
+        end
+      end
+    end
   end
 
 
-
-  def get_y_numbers(x,y)
+  def get_y_numbers(y)
     @grid.map{ |row| row[y] }.compact
   end
 
@@ -45,6 +55,8 @@ class Sudoku
     puts "^^^^^^^^^^^ Sudoku! ^^^^^^^^^^^"
   end
 end
+
+Sudoku.new.print_grid
 
 #         y
 #        0     1    2    3    4    5    6     7    8
