@@ -1,70 +1,51 @@
 class Sudoku
 
   def initialize
-    @grid = Array.new(9).map{ |e| 3.times.map{|f| Array.new(3)} }
-
-    (1..9).to_a.shuffle.each {|num| nine_inserts(num) }
-    # make_box_numbers(0,0)
-    # box 0 [[1,2,3], [4,5,6], [7,8,9]]
-    # =>
-    # (mini grid)
-    # [1,2,3]
-    # [4,5,6]
-    # [7,8,9]
+    @grid = Array.new(9).map{ Array.new(9) }
+    @grid = [
+      [1,2,3, 9,8,7, 'x','x','x'],
+      [4,nil,6, 3,2,1, 'x','x','x'],
+      [7,8,9, 6,5,4, 'x','x','x']
+    ]
   end
 
-  def nine_inserts(number)
-    9.times do |sqr_index|
-      next if number_in_mini_grid?(sqr_index, number)
-      # test_and_insert_nums(x_row, y_row, number)
-      # test_and_insert_nums(x_row, y_row, number)
+
+  def grid_insert(grid_index, num)
+    return false if grid_box(grid_index).flatten.include?(num)
+
+  end
+
+  #grid is made up of 9 boxes(0-8) of 9 small boxes
+  def grid_box(grid_index)
+    gridbox = []
+    case grid_index
+    when 0 then
+      gridbox << @grid[0][0] << @grid[0][1] << @grid[0][2]
+      gridbox << @grid[1][0] << @grid[1][1] << @grid[1][2]
+      gridbox << @grid[2][0] << @grid[2][1] << @grid[2][2]
+    when 1 then
+      gridbox << @grid[0][3] << @grid[0][4] << @grid[0][5]
+      gridbox << @grid[1][3] << @grid[1][4] << @grid[1][5]
+      gridbox << @grid[2][3] << @grid[2][4] << @grid[2][5]
     end
-  end
 
-  def number_in_mini_grid?(x_row, number)
-    @grid[x_row].flatten.include?(number)
-  end
-
-  def test_and_insert_nums(x_row, y_row, number)
-    number_inserted = false
-    3.times do |xdex|
-      break if number_inserted
-      3.times do |ydex|
-        number_inserted = insert_number(x_row + xdex, y_row + ydex, number)
-        break if number_inserted
-      end
-    end
-  end
-
-  def insert_number(x, y, num)
-    return false unless @grid[x][y].nil?
-    if ( !x_nums(x).include?(num) && !y_nums(y).include?(num) )
-      @grid[x][y] = num
-      return true
-    end
-  end
-
-  def box_nums(x,y) # send left corner coordinates
-    box_numbers = []
-    3.times do |x_row|
-      3.times do |y_row|
-        # puts "Grid box: #{x_row}, #{y_row}"
-        box_numbers << @grid[x + x_row][y + y_row]
-      end
-    end
-    box_numbers.compact
+    gridbox
   end
 
   def y_nums(y)
-    @grid.map{ |row| row[y] }.compact
+    @grid.map{|f| f[y] }.compact
   end
 
   def x_nums(x)
     @grid[x].compact
   end
 
+  def insert_number(x, y, num)
+    return false unless @grid[x][y].nil?
+    @grid[x][y] = num
+  end
+
   def one_thru_nine
-    # Array.new(9){|x=1| x+=1}
     (1..9).map{|f| f}
   end
 
