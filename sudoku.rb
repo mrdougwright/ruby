@@ -1,35 +1,34 @@
 class Sudoku
 
   def initialize
-    @grid = Array.new(9).map{ Array.new(9) }
+    # @grid = Array.new(9).map{ Array.new(9) }
+    @grid = Array.new(9).map{ |e| 3.times.map{|f| Array.new(3)} }
     @grid = [
-      [1,2,3, 9,8,7, 'x','x','x'],
-      [4,nil,6, 3,2,1, 'x','x','x'],
-      [7,8,9, 6,5,4, 'x','x','x']
+      [ [1,2,3], [9,8,7], ['x','x','x']],
+      [[4,nil,6], [3,2,1], ['x','x','x']],
+      [ [7,8,9], [6,5,4], ['x','x','x']]
     ]
   end
 
 
   def grid_insert(grid_index, num)
-    return false if grid_box(grid_index).flatten.include?(num)
+    gridbox = grid_box(grid_index)
+    return false if gridbox.flatten.include?(num)
+    gridbox.each do |grid_row|
+      next unless grid_row.include?(nil)
 
+    end
   end
 
   #grid is made up of 9 boxes(0-8) of 9 small boxes
   def grid_box(grid_index)
-    gridbox = []
+    # gridbox = [top 3, middle 3, bottom 3] numbers
     case grid_index
     when 0 then
-      gridbox << @grid[0][0] << @grid[0][1] << @grid[0][2]
-      gridbox << @grid[1][0] << @grid[1][1] << @grid[1][2]
-      gridbox << @grid[2][0] << @grid[2][1] << @grid[2][2]
+      [ @grid[0][0,3], @grid[1][0,3], @grid[2][0,3] ]
     when 1 then
-      gridbox << @grid[0][3] << @grid[0][4] << @grid[0][5]
-      gridbox << @grid[1][3] << @grid[1][4] << @grid[1][5]
-      gridbox << @grid[2][3] << @grid[2][4] << @grid[2][5]
+      [ @grid[0][3,3], @grid[1][3,3], @grid[2][3,3] ]
     end
-
-    gridbox
   end
 
   def y_nums(y)
