@@ -1,13 +1,20 @@
+require 'matrix'
+
+class Matrix
+  def []=(col,row,num)
+    @rows[col,row] = num
+  end
+end
+
 class Sudoku
 
+  attr_reader :grid
+
   def initialize
-    # @grid = Array.new(9).map{ Array.new(9) }
-    @grid = Array.new(9).map{ |e| 3.times.map{|f| Array.new(3)} }
-    @grid = [
-      [ [1,2,3], [9,8,7], ['x','x','x']],
-      [[4,nil,6], [3,2,1], ['x','x','x']],
-      [ [7,8,9], [6,5,4], ['x','x','x']]
-    ]
+    @grid = []
+    9.times { @grid << Matrix.build(3){nil} }
+
+    # @grid = Matrix[[1,2],[3,4]]
   end
 
 
@@ -20,15 +27,8 @@ class Sudoku
     end
   end
 
-  #grid is made up of 9 boxes(0-8) of 9 small boxes
   def grid_box(grid_index)
-    # gridbox = [top 3, middle 3, bottom 3] numbers
-    case grid_index
-    when 0 then
-      [ @grid[0][0,3], @grid[1][0,3], @grid[2][0,3] ]
-    when 1 then
-      [ @grid[0][3,3], @grid[1][3,3], @grid[2][3,3] ]
-    end
+
   end
 
   def y_nums(y)
